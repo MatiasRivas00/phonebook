@@ -7,8 +7,8 @@ const Person = require('./models/person')
 const person = require('./models/person')
 
 morgan.token('person', (req, res) => {
-    if(req.method==='POST') return JSON.stringify(req.body)
-    return ' '
+  if(req.method==='POST') return JSON.stringify(req.body)
+  return ' '
 })
 
 app.use(express.json())
@@ -20,11 +20,11 @@ const errorHandler = (error, request, response, next) => {
   console.log(error.message)
 
   if(error.name === 'CastError'){
-    return response.status(400).send({error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
   }
 
   else if(error.name === 'ValidationError'){
-    return response.status(400).send({error: error.message})
+    return response.status(400).send({ error: error.message })
   }
 
   next(error)
@@ -32,12 +32,12 @@ const errorHandler = (error, request, response, next) => {
 
 app.get('/info', (request, response) => {
   Person.find({}).then(persons => {
-  const info = `
-    <p> Phonebook has info for ${persons.length} people </p>
-    <br/>
-    <p> ${new Date().toString()} </p>
-  `
-  response.send(info)
+    const info = `
+      <p> Phonebook has info for ${persons.length} people </p>
+      <br/>
+      <p> ${new Date().toString()} </p>
+    `
+    response.send(info)
   })
 })
 
@@ -50,7 +50,7 @@ app.get('/api/persons', (request, response, next) => {
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
-  const id = request.params.id 
+  const id = request.params.id
   Person.findById(id)
     .then(person => {
       response.json(person)
@@ -91,13 +91,13 @@ app.post('/api/persons', (request, response, next) => {
 app.put('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
   const body = request.body
-  const config = {new: true, runValidators: true, content: 'query'}
+  const config = { new: true, runValidators: true, content: 'query' }
 
   const person = {
     name: body.name,
     number: body.number
   }
-  
+
   Person.findByIdAndUpdate(id, person, config)
     .then(updatedPerson => {
       response.json(updatedPerson)
@@ -109,5 +109,5 @@ app.use(errorHandler)
 
 PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    `Server is running on port ${PORT}`
+  `Server is running on port ${PORT}`
 })
